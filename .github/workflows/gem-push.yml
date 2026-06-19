@@ -14,6 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Set up Ruby 3.4
       uses: ruby/setup-ruby@v1
@@ -26,7 +28,17 @@ jobs:
         version=$(echo "${GITHUB_REF#refs/tags/}")
         echo "version=$version" >> $GITHUB_ENV
 
+    - name: Check if a previous tag exists
+      id: previous_tag
+      run: |
+        if [ "$(git tag --list 'v*' | wc -l)" -gt 1 ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Generate CHANGELOG
+      if: steps.previous_tag.outputs.exists == 'true'
       id: changelog
       uses: requarks/changelog-action@v1
       with:
@@ -38,6 +50,7 @@ jobs:
         useGitmojis: true
 
     - name: Commit updated CHANGELOG.md
+      if: steps.previous_tag.outputs.exists == 'true'
       run: |
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
