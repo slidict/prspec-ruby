@@ -4,14 +4,13 @@ require_relative "lib/prspec/ruby/version"
 
 Gem::Specification.new do |spec|
   spec.name = "prspec-ruby"
-  spec.version = Prspec::Ruby::VERSION
+  spec.version = Rrspec::Ruby::VERSION
   spec.authors = ["Yusuke Abe"]
   spec.email = ["255824173+abechan1@users.noreply.github.com"]
 
-  spec.summary = "AI-powered test review for Rails pull requests."
-  spec.description = "prspec finds missing specs, risky Rails changes, and weak test coverage " \
-                      "in your pull requests before they get merged."
-  spec.homepage = "https://prspec.io"
+  spec.summary = "Test risk review for Ruby/RSpec projects."
+  spec.description = "prspec finds Ruby changes that may be missing corresponding RSpec updates before they get merged."
+  spec.homepage = "https://github.com/slidict/prspec-ruby"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
   spec.metadata["homepage_uri"] = spec.homepage

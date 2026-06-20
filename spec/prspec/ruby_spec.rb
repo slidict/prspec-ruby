@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Prspec::Ruby do
+RSpec.describe Rrspec::Ruby do
   it "has a version number" do
-    expect(Prspec::Ruby::VERSION).not_to be nil
+    expect(described_class::VERSION).not_to be nil
   end
 end

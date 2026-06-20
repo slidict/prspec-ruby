@@ -1,19 +1,24 @@
-# Prspec::Ruby
+# prspec-ruby
 
-AI-powered test review for Rails pull requests. prspec finds missing specs, risky Rails
-changes, and weak test coverage in your pull requests before they get merged.
+`prspec` is a local CLI for Ruby/RSpec projects. It reviews a pull request or a
+local `git diff` from a test-risk perspective before merge. It is not a code
+review tool; it is a small test review helper that warns when Ruby changes appear
+to be missing corresponding spec updates.
 
-See [prspec.io](https://prspec.io) for more details.
+The public tool name and executable command are `prspec`. The gem name is
+`prspec-ruby`, the require name is `prspec-ruby`, files live under
+`lib/prspec/...`, and the implementation namespace is intentionally
+`Rrspec::Ruby`.
 
 ## Installation
 
-Not yet released on RubyGems.org. Install from git in the meantime:
+Install from git until the gem is released:
 
 ```bash
 bundle add prspec-ruby --git https://github.com/slidict/prspec-ruby.git
 ```
 
-Once released, you'll be able to install it with:
+After release, install with:
 
 ```bash
 gem install prspec-ruby
@@ -21,22 +26,90 @@ gem install prspec-ruby
 
 ## Usage
 
-TODO: Write usage instructions here
+Run a review against the default diff:
+
+```bash
+prspec review
+```
+
+Review a specific range or pull-request style range:
+
+```bash
+prspec review HEAD~1
+prspec review main...HEAD
+```
+
+By default, warnings exit with status `0`. To fail CI when warnings are found:
+
+```bash
+prspec review --fail-on-warning
+```
+
+Other commands:
+
+```bash
+prspec version
+prspec help
+```
+
+## Output examples
+
+When risks are found:
+
+```text
+prspec review
+
+MISSING SPEC
+lib/billing/refund_calculator.rb
+No matching spec changed.
+Expected one of:
+- spec/billing/refund_calculator_spec.rb
+- spec/lib/billing/refund_calculator_spec.rb
+
+RISKY CHANGE
+lib/user_status_transition.rb
+Ruby file changed without spec updates.
+
+2 issues found.
+```
+
+When no risks are found:
+
+```text
+prspec review
+
+No test risks found.
+```
+
+## MVP limitations
+
+This MVP is local-only. It does not include SaaS, a Web UI, a GitHub App,
+a database, authentication, external API integrations, LLM integrations, or a
+configuration file. The heuristics are intentionally simple: `prspec review`
+reads `git diff --name-only`, ignores files under `spec/`, checks changed Ruby
+files, guesses matching spec paths, and warns if no matching spec changed in the
+same diff.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Run tests with:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```bash
+bundle exec rspec
+```
+
+Run the executable directly during development:
+
+```bash
+bundle exec exe/prspec version
+bundle exec exe/prspec review HEAD~1
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/slidict/prspec-ruby. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/slidict/prspec-ruby/blob/prspec-ruby/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/slidict/prspec-ruby.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Prspec::Ruby project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/slidict/prspec-ruby/blob/prspec-ruby/CODE_OF_CONDUCT.md).
+The gem is available as open source under the terms of the MIT License.

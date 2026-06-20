@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "prspec/ruby"
+require "stringio"
+require "prspec-ruby"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
